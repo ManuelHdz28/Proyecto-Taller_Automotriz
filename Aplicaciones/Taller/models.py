@@ -10,4 +10,5 @@ class Repuesto(models.Model): # * Modelo para representar un repuesto
     cantidad_disponible = models.PositiveIntegerField() # ~ tipo de dato para cantidades enteras positivas
 
     def __str__(self): # * Método para representar el objeto como una cadena
-        return self.nombre # ~ Devuelve el nombre del repuesto como representación en cadena
+        return self.nombre_repuesto # ~ Devuelve el nombre del repuesto como representación en cadena
+    

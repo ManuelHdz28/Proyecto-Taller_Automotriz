@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-sv'  # Spanish (El Salvador)
 
-TIME_ZONE = 'Etc/GTM+6'  # GMT-6 timezone
+TIME_ZONE = 'Etc/GMT+6'  # GMT-6 timezone
 
 USE_I18N = True
 
