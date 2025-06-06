@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Aplicaciones.Automotriz',  # Custom app for the automotriz project
+    'Aplicaciones.Taller',  # Custom app for the automotriz project
 ]
 
 MIDDLEWARE = [
@@ -103,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'es_sv'  # Spanish (El Salvador)
+LANGUAGE_CODE = 'es-sv'  # Spanish (El Salvador)
 
 TIME_ZONE = 'Etc/GTM+6'  # GMT-6 timezone
 
