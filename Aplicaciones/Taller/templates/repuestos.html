@@ -35,10 +35,9 @@
                         <td>{{ repuesto.cantidad_disponible }}</td>
                         <td>
                             <a href="" class="btn btn-warning">Editar</a>
-                            <form action="" method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
+                            
+                            <a href="{% url 'eliminar_repuesto' repuesto.id_repuesto %}" class="btn btn-danger">Eliminar</button>
+                        
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -66,30 +65,31 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="post" action="">
+        <form method="post" action="{% url 'crear_repuesto' %}"> 
             {% csrf_token %}
             <div class="mb-3">
                 <label for="nombre_repuesto" class="form-label">Nombre del Repuesto</label>
-                <input type="text" class="form-control" id="nombre_repuesto" name="nombre_repuesto" required>
+                <input type="text" class="form-control" id="nombre_repuesto" name="nombre_repuesto" placeholder="Ingrese el Nombre del Repuesto" required>
             </div>
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                <textarea placeholder="Ingrese la descripcion del Repuesto" class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
             </div>
             <div class="mb-3">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" name="precio" required>
+                <label for="precio" class="form-label">Precio $</label>
+                <input type="number" placeholder="0" class="form-control" id="precio" name="precio" required>
             </div>
             <div class="mb-3">
                 <label for="cantidad_disponible" class="form-label">Cantidad Disponible</label>
-                <input type="number" class="form-control" id="cantidad_disponible" name="cantidad_disponible" required>
+                <input type="number" placeholder="0" class="form-control" id="cantidad_disponible" name="cantidad_disponible" required>
             </div>
             
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Agregar Repuesto</button>
+            </div>
+
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
