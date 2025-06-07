@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
-<head>
-    <title>Taller de Aplicaciones</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-    <script src="{% static 'js/scripts.js' %}"></script>
-</head>
-<body>
-    <header>
+{% extends "plantilla.html" %}{% load static %}
+
+{% block title %} <!-- * Título de la página -->
+    <title>Taller Automotriz</title>
+{% endblock %}
+
+{% block icono %} <!-- * Icono de la página -->
+    <link rel="shortcut icon" href="{% static 'icono.ico' %}" type="image/x-icon">
+{% endblock %}
+
+
+
+{% block content %} <!-- * Contenido de la página -->
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
         <h1>Bienvenido al Taller de Aplicaciones</h1>
-    </header>
-    
-    
-</body>
-</html>
+    </div>
+{% endblock %}
+
