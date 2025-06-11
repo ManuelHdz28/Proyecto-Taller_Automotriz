@@ -6,31 +6,17 @@
 
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="">Editar Repuestos</h1>
-        <form method="post" action="">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del Repuesto</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ repuesto.nombre }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="cantidad" class="form-label">Cantidad</label>
-                <input type="number" class="form-control" id="cantidad" name="cantidad" value="{{ repuesto.cantidad }}" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        </form>
-
+    
 
 
 
 <!-- Modal editar repuestos -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Repuesto</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        
       </div>
       <div class="modal-body">
             <form method="post" action="{% url 'editar_repuesto' repuesto.id_repuesto %}"> 

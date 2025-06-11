@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from .models import Repuesto
 from django.shortcuts import redirect
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -34,6 +35,8 @@ def crear_repuesto(request):
             cantidad_disponible=cantidad_disponible
         )
         
+        messages.success(request, 'Repuesto creado exitosamente.')  # * Mensaje de éxito al crear un repuesto
+        
         return redirect('repuestos')
     else:
         return render(request, 'repuestos.html')
@@ -45,6 +48,7 @@ def eliminar_repuesto(request, id_repuesto):
     try:
         repuesto = Repuesto.objects.get(id_repuesto=id_repuesto)
         repuesto.delete()
+        messages.success(request, 'Repuesto eliminado exitosamente.')  # * Mensaje de éxito al eliminar un repuesto
         return redirect('repuestos')
     except Repuesto.DoesNotExist:
         return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
@@ -63,6 +67,7 @@ def editar_repuesto(request, id_repuesto):
             repuesto.precio = request.POST.get('precio')
             repuesto.cantidad_disponible = request.POST.get('cantidad_disponible')
             repuesto.save()
+            messages.success(request, 'Repuesto editado exitosamente.') # * Mensaje de éxito al editar un repuesto
             return redirect('repuestos')
         
         return render(request, 'editar_repuestos.html', {'repuesto': repuesto})
