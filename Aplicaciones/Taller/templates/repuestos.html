@@ -36,8 +36,8 @@ Repuestos
                         <td>
                             <a href="{% url 'editar_repuesto' repuesto.id_repuesto %}" class="btn btn-warning">Editar</a>
                             
+                            <a href="Javascript:void(0)" class="btn btn-danger" onclick="eliminarFila('{% url 'eliminar_repuesto' repuesto.id_repuesto %}', 'Repuestos')">Eliminar</a>   
                             <a href="{% url 'eliminar_repuesto' repuesto.id_repuesto %}" class="btn btn-danger">Eliminar</button>
-                        
                     </tr>
                     {% endfor %}
                 </tbody>

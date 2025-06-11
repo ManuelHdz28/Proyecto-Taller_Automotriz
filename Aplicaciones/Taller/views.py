@@ -40,19 +40,16 @@ def crear_repuesto(request):
         return redirect('repuestos')
     else:
         return render(request, 'repuestos.html')
-    
-def eliminar_repuesto(request, id_repuesto):
-    """
-     * Elimina un repuesto de la base de datos.
-    """
+
+def eliminar_repuesto(request, id_repuesto): # * Vista para eliminar una carrera por su ID
+    # * Se busca la carrera por su ID y se elimina
     try:
-        repuesto = Repuesto.objects.get(id_repuesto=id_repuesto)
-        repuesto.delete()
-        messages.success(request, 'Repuesto eliminado exitosamente.')  # * Mensaje de éxito al eliminar un repuesto
-        return redirect('repuestos')
+        repuestodb = Repuesto.objects.get(id_repuesto=id_repuesto)
+        repuestodb.delete()
+        messages.success(request, '¡Repuesto Borrado de la base de datos correctamente!') # * Mensaje de éxito al eliminar el repuesto
+        return redirect('/repuestos')
     except Repuesto.DoesNotExist:
         return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
-    
         
 def editar_repuesto(request, id_repuesto):
     """
