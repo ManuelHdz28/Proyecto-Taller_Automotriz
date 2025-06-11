@@ -1,7 +1,7 @@
 {% extends 'plantilla.html' %} {% load static %}
-{% block titulo %}
-<title>Repuestos</title>
-{% endblock %}
+{% block title %}
+Repuestos 
+{% endblock title %}
 
 {% block content %}
     <div class="container">
@@ -34,7 +34,7 @@
                         <td>${{ repuesto.precio }}</td>
                         <td>{{ repuesto.cantidad_disponible }}</td>
                         <td>
-                            <a href="" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'editar_repuesto' repuesto.id_repuesto %}" class="btn btn-warning">Editar</a>
                             
                             <a href="{% url 'eliminar_repuesto' repuesto.id_repuesto %}" class="btn btn-danger">Eliminar</button>
                         

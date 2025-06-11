@@ -36,7 +36,7 @@ def crear_repuesto(request):
         
         return redirect('repuestos')
     else:
-        return render(request, 'crear_repuesto.html')
+        return render(request, 'repuestos.html')
     
 def eliminar_repuesto(request, id_repuesto):
     """
@@ -50,5 +50,23 @@ def eliminar_repuesto(request, id_repuesto):
         return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
     
         
+def editar_repuesto(request, id_repuesto):
+    """
+     * Edita un repuesto existente.
+    """
+    try:
+        repuesto = Repuesto.objects.get(id_repuesto=id_repuesto)
         
+        if request.method == 'POST':
+            repuesto.nombre_repuesto = request.POST.get('nombre_repuesto')
+            repuesto.descripcion = request.POST.get('descripcion')
+            repuesto.precio = request.POST.get('precio')
+            repuesto.cantidad_disponible = request.POST.get('cantidad_disponible')
+            repuesto.save()
+            return redirect('repuestos')
+        
+        return render(request, 'editar_repuestos.html', {'repuesto': repuesto})
+    
+    except Repuesto.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
         

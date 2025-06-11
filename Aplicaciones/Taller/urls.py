@@ -7,5 +7,6 @@ urlpatterns = [
     path('repuestos/', views.repuestos, name="repuestos"),  # * Mapas de la URL 'repuestos/' a la vista repuestos
     path('crear_repuesto/', views.crear_repuesto, name="crear_repuesto"),
     path('eliminar_repuesto/<int:id_repuesto>/', views.eliminar_repuesto, name="eliminar_repuesto"),  # * mapea la URL 'eliminar_repuesto/<id_repuesto>/' a la vista eliminar_repuesto
+    path('editar_repuesto/<int:id_repuesto>/', views.editar_repuesto, name="editar_repuesto"),  # * mapea la URL 'editar_repuesto/<id_repuesto>/' a la vista editar_repuesto
 ]
 
