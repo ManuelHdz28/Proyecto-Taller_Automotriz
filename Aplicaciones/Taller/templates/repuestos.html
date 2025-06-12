@@ -65,7 +65,7 @@ Repuestos
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{% url 'crear_repuesto' %}"> 
+        <form method="post" action="{% url 'crear_repuesto' %}" id="formulario-repuesto"> 
             {% csrf_token %}
             <div class="mb-3">
                 <label for="nombre_repuesto" class="form-label">Nombre del Repuesto</label>
@@ -95,4 +95,6 @@ Repuestos
   </div>
 </div>
 <script src="{% static 'js/tabla.js' %}"></script>
+<script src="{% static 'js/validate.js' %}"></script>
+
 {% endblock content %}
