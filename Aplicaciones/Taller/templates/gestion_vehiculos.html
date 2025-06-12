@@ -1,0 +1,119 @@
+{% extends "plantilla.html" %}{% load static %}
+
+<!-- * Título de la página -->
+{% block title %} 
+    Gestion Vehiculos
+{% endblock %}
+
+{% block icono %} <!-- * Icono de la página -->
+    <link rel="shortcut icon" href="{% static 'icono.ico' %}" type="image/x-icon">
+{% endblock %}
+
+
+
+{% block content %} <!-- * Contenido de la página -->
+    
+
+    <div class="container">
+        <h1 class="text-center mt-4">Gestion Vehiculos</h1>
+
+
+        <button type="button" class="btn btn-primary mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            + Agregar Vehiculo
+        </button>
+
+        <br>
+        {% if gestion_vehiculos %} <!-- * Verifica si hay vehiculos disponibles -->
+        <div class="table-responsive" mt-4>
+            {% if gestion_vehiculos %} <!-- * Verifica si hay vehiculos en la lista -->
+            <table class="table table-striped table-hover text-center mt-5" id="tabla-repuestos">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Propietario</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vehiculo in gestion_vehiculos %}
+                    <tr>
+                        <td>{{ vehiculo.placa_vehiculo }}</td>
+                        <td>{{ vehiculo.nombre_propietario }}</td>
+                        <td>{{ vehiculo.marca }}</td>
+                        <td>{{ vehiculo.modelo }}</td>
+                        <td>{{ vehiculo.anio }}</td>
+                        <td>
+                            <a href="" class="btn btn-info">Ver Detalles</a>
+                           
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info text-center mt-4" role="alert">
+                No hay Vehiculos disponibles en este momento.
+            </div>
+            {% endif %}
+        
+    
+    {% else %}
+        <div class="alert alert-warning text-center mt-4" role="alert">
+            No se encontraron Vehiculos Registrados.
+        </div>
+    {% endif %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Vehiculos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'crear_vehiculo' %}" id="formulario-vehiculo" enctype="multipart/form-data"> 
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="placa_vehiculo" class="form-label">Placa Vehiculo</label>
+        <input type="text" class="form-control" id="placa_vehiculo" name="placa_vehiculo" placeholder="Ingrese la Placa del Vehiculo" required>
+    </div>
+    <div class="mb-3">
+        <label for="propietario" class="form-label">Propietario</label>
+        <input type="text" class="form-control" id="propietario" name="nombre_propietario" placeholder="Ingrese el Nombre del Propietario" required>
+    </div>
+    <div class="mb-3">
+        <label for="marca" class="form-label">Marca</label>
+        <input type="text" class="form-control" id="marca" name="marca" placeholder="Ingrese la Marca del Vehiculo" required>
+    </div>
+    <div class="mb-3">
+        <label for="modelo" class="form-label">Modelo</label>
+        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ingrese el Modelo del Vehiculo" required>
+    </div>
+    <div class="mb-3">
+        <label for="anio" class="form-label">Año</label>
+        <input type="number" class="form-control" id="anio" name="anio" placeholder="Ingrese el Año del Vehiculo" required>
+    </div>
+    <div class="mb-3">
+        <label for="fotos" class="form-label">Fotos del Vehículo (3 normales + 1 de placas)</label>
+        <input type="file" class="form-control" id="fotos" name="fotos" accept="image/*" multiple required>
+        <div class="form-text">Debes subir exactamente 4 imágenes.</div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Agregar Vehiculo</button>
+    </div>
+</form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/tabla.js' %}"></script>
+<script src="{% static 'js/validate.js' %}"></script>
+
+
+{% endblock %}

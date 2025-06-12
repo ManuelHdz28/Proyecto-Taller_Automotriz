@@ -1,6 +1,8 @@
 # ! views.py Aplicaciones/Taller
 from django.shortcuts import render
 from .models import Repuesto
+from .models import Vehiculo  # * Importa el modelo Vehiculo para la gestión de vehículos
+from .models import FotoVehiculo  # * Importa el modelo FotoVehiculo para manejar las fotos de los vehículos
 from django.shortcuts import redirect
 from django.contrib import messages
 
@@ -19,6 +21,15 @@ def repuestos(request):
      * Render the list of repuestos.
     """
     return render(request, 'repuestos.html', {'repuestos': repuestosdbb})  # * Pasa los repuestos a la plantilla 'repuestos.html' 
+
+def gestion_vehiculos(request):
+
+    gestionvehiculos = Vehiculo.objects.all()   # * Recibe todos los vehículos de la base de datos para la gestión de vehículos
+
+    """
+     * Render the vehicle management page.
+    """
+    return render(request, 'gestion_vehiculos.html', {'gestion_vehiculos': gestionvehiculos})  # * Renderiza la plantilla 'gestion_vehiculos.html'
 
 def crear_repuesto(request):
     if request.method == 'POST':
@@ -71,4 +82,32 @@ def editar_repuesto(request, id_repuesto):
     
     except Repuesto.DoesNotExist:
         return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
-        
+    
+def crear_vehiculo(request):
+    if request.method == 'POST':
+        placa = request.POST.get('placa_vehiculo')  # ← obtener la placa
+        nombre = request.POST.get('nombre_propietario')
+        marca = request.POST.get('marca')
+        modelo = request.POST.get('modelo')
+        anio = request.POST.get('anio')
+        fotos = request.FILES.getlist('fotos')
+
+        if len(fotos) != 4:
+            return render(request, 'vehiculos/crear_vehiculo.html', {
+                'error': 'Debes subir exactamente 4 fotos del vehículo.',
+            })
+
+        vehiculo = Vehiculo.objects.create(
+            placa_vehiculo=placa,
+            nombre_propietario=nombre,
+            marca=marca,
+            modelo=modelo,
+            anio=anio
+        )
+
+        for imagen in fotos:
+            FotoVehiculo.objects.create(vehiculo=vehiculo, imagen=imagen)
+
+        return redirect('gestion_vehiculos')  # ajusta esto a tu URL de redirección
+    else:
+        return render(request, 'gestion_vehiculos.html')

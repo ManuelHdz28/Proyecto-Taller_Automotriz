@@ -4,9 +4,14 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),  # * Maps the root URL to the index view
+    #^ seccion de repuestos
     path('repuestos/', views.repuestos, name="repuestos"),  # * Mapas de la URL 'repuestos/' a la vista repuestos
     path('crear_repuesto/', views.crear_repuesto, name="crear_repuesto"),
     path('eliminar_repuesto/<id_repuesto>/', views.eliminar_repuesto, name="eliminar_repuesto"),  # * mapea la URL 'eliminar_repuesto/<id_repuesto>/' a la vista eliminar_repuesto
     path('editar_repuesto/<int:id_repuesto>/', views.editar_repuesto, name="editar_repuesto"),  # * mapea la URL 'editar_repuesto/<id_repuesto>/' a la vista editar_repuesto
+    
+    #^ seccion de vehiculos
+    path('gestion_vehiculos/', views.gestion_vehiculos, name="gestion_vehiculos"),  # * Mapea la URL 'gestion_vehiculos/' a la vista gestion_vehiculos
+    path('crear_vehiculo/', views.crear_vehiculo, name="crear_vehiculo"),  # * Mapea la URL 'crear_vehiculo/' a la vista crear_vehiculo
 ]
 
