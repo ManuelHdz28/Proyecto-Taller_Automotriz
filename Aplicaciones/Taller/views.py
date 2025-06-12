@@ -5,6 +5,9 @@ from .models import Vehiculo  # * Importa el modelo Vehiculo para la gestión de
 from .models import FotoVehiculo  # * Importa el modelo FotoVehiculo para manejar las fotos de los vehículos
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.shortcuts import render, get_object_or_404
+import os  # * Importa el módulo os para manejar archivos del sistema operativo
+
 
 # Create your views here.
 def index(request):
@@ -111,3 +114,22 @@ def crear_vehiculo(request):
         return redirect('gestion_vehiculos')  # ajusta esto a tu URL de redirección
     else:
         return render(request, 'gestion_vehiculos.html')
+
+
+
+def detalle_vehiculo(request, id):
+    vehiculo = get_object_or_404(Vehiculo, id=id)
+    return render(request, 'detalle_vehiculo.html', {'vehiculo': vehiculo})
+
+def eliminar_vehiculo(request, id):
+    vehiculo = get_object_or_404(Vehiculo, id=id)
+
+    # Eliminar cada imagen físicamente
+    for foto in vehiculo.fotos.all():
+        if foto.imagen and os.path.isfile(foto.imagen.path):
+            os.remove(foto.imagen.path)
+
+    # Eliminar el vehículo (esto elimina los registros de FotoVehiculo por CASCADE)
+    vehiculo.delete()
+    messages.success(request, 'Vehículo eliminado exitosamente.')  # Mensaje de éxito al eliminar el vehículo
+    return redirect('gestion_vehiculos')  # Cambia esto al nombre de tu vista destino

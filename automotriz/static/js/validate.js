@@ -56,10 +56,20 @@ $("#formulario-repuesto").validate({
 
 $("#formulario-vehiculo").validate({
     rules: {
+        placa_vehiculo: {
+            required: true,
+            minlength: 9,
+            maxlength: 9
+        },
+        nombre_propietario: {
+            required: true,
+            minlength: 3,
+            maxlength: 100
+        },
         marca: {
             required: true,
             minlength: 2,
-            maxlength: 50
+            maxlength: 90
         },
         modelo: {
             required: true,
@@ -72,13 +82,23 @@ $("#formulario-vehiculo").validate({
             min: 1886, // Año del primer automóvil
             max: new Date().getFullYear() // Año actual
         },
-        color: {
+        fotos: {
             required: true,
-            minlength: 3,
-            maxlength: 30
+            extension: "jpg|jpeg|png|gif",
+            exactlyFourFiles: true
         }
     },
     messages: {
+        placa_vehiculo: {
+            required: "Por favor, ingrese la placa del vehículo.",
+            minlength: "La placa debe tener exactamente 9 caracteres.",
+            maxlength: "La placa no debe exceder 9 caracteres."
+        },
+        nombre_propietario: {
+            required: "Por favor, ingrese el nombre del propietario.",
+            minlength: "El nombre del propietario debe tener al menos 3 caracteres.",
+            maxlength: "El nombre del propietario no debe exceder 100 caracteres."
+        },
         marca: {
             required: "Por favor, ingrese la marca del vehículo.",
             minlength: "Debe tener al menos 2 caracteres.",
@@ -95,11 +115,11 @@ $("#formulario-vehiculo").validate({
             min: "El año no puede ser anterior a 1886.",
             max: "El año no puede ser mayor que el año actual."
         },
-        color: {
-            required: "Por favor, ingrese el color del vehículo.",
-            minlength: "Debe tener al menos 3 caracteres.",
-            maxlength: "No debe exceder 30 caracteres."
+        fotos: {
+            required: "Por favor, suba al menos una foto del vehículo.",
+            extension: "Solo se permiten archivos de imagen (jpg, jpeg, png, gif)."
         }
+        
     },
     errorClass: 'invalid-feedback',
     errorElement: 'div',
@@ -112,5 +132,10 @@ $("#formulario-vehiculo").validate({
     submitHandler: function(form) {
         form.submit(); // * Si todo está validado correctamente
     }
+    
 }); 
+
+$.validator.addMethod("exactlyFourFiles", function(value, element) {
+    return element.files.length === 4;
+}, "Debes subir exactamente 4 imágenes.");
 

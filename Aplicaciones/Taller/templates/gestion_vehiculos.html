@@ -34,6 +34,7 @@
                         <th>Marca</th>
                         <th>Modelo</th>
                         <th>Año</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +46,7 @@
                         <td>{{ vehiculo.modelo }}</td>
                         <td>{{ vehiculo.anio }}</td>
                         <td>
-                            <a href="" class="btn btn-info">Ver Detalles</a>
+                            <a href="{% url 'detalle_vehiculo' vehiculo.id %}" class="btn btn-info">Ver Detalles</a>
                            
                         </td>
                     </tr>
@@ -99,7 +100,7 @@
     </div>
     <div class="mb-3">
         <label for="fotos" class="form-label">Fotos del Vehículo (3 normales + 1 de placas)</label>
-        <input type="file" class="form-control" id="fotos" name="fotos" accept="image/*" multiple required>
+        <input type="file" class="form-control" id="fotos" name="fotos[]" accept="image/*" multiple required>
         <div class="form-text">Debes subir exactamente 4 imágenes.</div>
     </div>
 

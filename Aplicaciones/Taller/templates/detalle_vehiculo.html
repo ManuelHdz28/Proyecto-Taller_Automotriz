@@ -1,0 +1,65 @@
+{% extends "plantilla.html" %}
+{% load static %}
+
+{% block title %}Detalles del Vehículo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Detalles del Vehículo</h2>
+    <a href="{% url 'gestion_vehiculos' %}" class="btn btn-primary ">
+        Volver
+    </a>
+    <div class="card mt-4">
+        <div class="card-body">
+
+            <table class="table table-striped table-hover text-center mt-5" id="tabla-repuestos">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Propietario</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>{{ vehiculo.placa_vehiculo }}</td>
+                        <td>{{ vehiculo.nombre_propietario }}</td>
+                        <td>{{ vehiculo.marca }}</td>
+                        <td>{{ vehiculo.modelo }}</td>
+                        <td>{{ vehiculo.anio }}</td>
+                        <td>
+                            <a href="" class="btn btn-warning">Editar</a>
+
+                            <a href="Javascript:void(0)" class="btn btn-danger" onclick="eliminarFila('{% url 'eliminar_vehiculo' vehiculo.id %}', 'Vehículos')">Eliminar</a>
+                        </td>
+                    </tr>
+                       
+                    
+                </tbody>
+            </table>
+
+            
+
+            <h5 class="mt-4">Fotos del Vehículo</h5>
+
+            <div class="row">
+                {% for foto in vehiculo.fotos.all %}
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ foto.imagen.url }}" data-lightbox="galeria-vehiculo" data-title="Foto {{ forloop.counter }}">
+                        <img src="{{ foto.imagen.url }}" alt="Foto del vehículo" class="img-fluid rounded shadow-sm">
+                        </a>
+            </div>
+                {% empty %}
+                <p class="text-muted">No hay fotos disponibles para este vehículo.</p>
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
