@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import Repuesto
 from .models import Vehiculo  # * Importa el modelo Vehiculo para la gestión de vehículos
 from .models import FotoVehiculo  # * Importa el modelo FotoVehiculo para manejar las fotos de los vehículos
+from .models import TipoMantenimiento  # * Importa el modelo TipoMantenimiento para manejar los tipos de mantenimiento
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
@@ -155,3 +156,41 @@ def editar_vehiculo(request, id):
         return redirect('detalle_vehiculo', id=vehiculo.id)
 
     return render(request, 'editar_vehiculo.html', {'vehiculo': vehiculo})
+
+def tipos_mantenimiento(request):
+    
+    tipos_mantenimiento = TipoMantenimiento.objects.all()  # * Recibe todos los tipos de mantenimiento de la base de datos
+    """
+     * Render the type of maintenance page.
+    """
+    return render(request, 'tipos_mantenimiento.html', {'tipos_mantenimiento': tipos_mantenimiento})  # * Renderiza la plantilla 'tipos_mantenimiento.html'
+
+def crear_tipo_mantenimiento(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre_mantenimiento')
+        precio = request.POST.get('precio_mantenimiento')
+
+        TipoMantenimiento.objects.create(
+            nombre_mantenimiento=nombre,
+            precio_mantenimiento=precio
+        )
+        
+        messages.success(request, 'Tipo de mantenimiento creado exitosamente.')  # * Mensaje de éxito al crear un tipo de mantenimiento
+        
+        return redirect('tipos_mantenimiento')
+    else:
+        return render(request, 'tipos_mantenimiento.html')
+
+def eliminar_tipo_mantenimiento(request, id_mantenimiento):
+    try:
+        tipo_mantenimiento = TipoMantenimiento.objects.get(id_mantenimiento=id_mantenimiento)
+        tipo_mantenimiento.delete()
+        messages.success(request, '¡Tipo de mantenimiento eliminado correctamente!')  # * Mensaje de éxito al eliminar un tipo de mantenimiento
+        return redirect('tipos_mantenimiento')
+    except TipoMantenimiento.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Tipo de mantenimiento no encontrado.'})  # * Manejo de error si el tipo de mantenimiento no existe
+    
+
+    
+
+    

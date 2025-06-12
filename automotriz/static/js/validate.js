@@ -139,3 +139,5 @@ $.validator.addMethod("exactlyFourFiles", function(value, element) {
     return element.files.length === 4;
 }, "Debes subir exactamente 4 imágenes.");
 
+
+

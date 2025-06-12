@@ -16,5 +16,11 @@ urlpatterns = [
     path('vehiculo/<int:id>/', views.detalle_vehiculo, name='detalle_vehiculo'), # * Mapea la URL 'vehiculo/<id>/' a la vista detalle_vehiculo
     path('eliminar_vehiculo/<int:id>/', views.eliminar_vehiculo, name='eliminar_vehiculo'),  # * Mapea la URL 'eliminar_vehiculo/<id>/' a la vista eliminar_vehiculo
     path('editar_vehiculo/<int:id>/', views.editar_vehiculo, name='editar_vehiculo'),  # * Mapea la URL 'editar_vehiculo/<id>/' a la vista editar_vehiculo
+    
+    #^ seccion de tipos de mantenimiento
+    path('tipos_mantenimiento/', views.tipos_mantenimiento, name="tipos_mantenimiento"),  # * Mapea la URL 'tipos_mantenimiento/' a la vista tipos_mantenimiento
+    path('crear_tipo_mantenimiento/', views.crear_tipo_mantenimiento, name="crear_tipo_mantenimiento"),  # * Mapea la URL 'crear_tipo_mantenimiento/' a la vista crear_tipo_mantenimiento
+    path('eliminar_tipo_mantenimiento/<int:id_mantenimiento>/', views.eliminar_tipo_mantenimiento, name="eliminar_tipo_mantenimiento"),  # * Mapea la URL 'eliminar_tipo_mantenimiento/<id_tipo_mantenimiento>/' a la vista eliminar_tipo_mantenimiento
+    
 ]
 

@@ -35,4 +35,11 @@ class FotoVehiculo(models.Model):
     def __str__(self):
         return f"Foto de {self.vehiculo}"
     
- 
+class TipoMantenimiento(models.Model):
+    id_mantenimiento = models.AutoField(primary_key=True)  # ~ Campo de clave primaria autoincremental
+    nombre_mantenimiento = models.CharField(max_length=100, unique=True)  # * Nombre del tipo de mantenimiento
+    precio_mantenimiento = models.DecimalField(max_digits=10, decimal_places=2)  # * Precio del mantenimiento
+
+    def __str__(self):
+        return self.nombre_mantenimiento  # ~ Devuelve el nombre del tipo de mantenimiento como representación en cadena
+    
