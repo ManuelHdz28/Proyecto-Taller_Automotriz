@@ -2,7 +2,7 @@
 $("#tabla-repuestos").DataTable({
 
     "language": {
-        "url": "/static/js/Spanish.json",   
+        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
         "search": "Buscar:",
         "lengthMenu": "Mostrar _MENU_ registros por página",
         "zeroRecords": "No se encontraron resultados",

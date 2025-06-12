@@ -88,17 +88,19 @@ def editar_repuesto(request, id_repuesto):
     
 def crear_vehiculo(request):
     if request.method == 'POST':
-        placa = request.POST.get('placa_vehiculo')  # ← obtener la placa
+        placa = request.POST.get('placa_vehiculo')  #* ← obtener la placa
         nombre = request.POST.get('nombre_propietario')
         marca = request.POST.get('marca')
         modelo = request.POST.get('modelo')
         anio = request.POST.get('anio')
         fotos = request.FILES.getlist('fotos')
 
+            
         if len(fotos) != 4:
-            return render(request, 'vehiculos/crear_vehiculo.html', {
-                'error': 'Debes subir exactamente 4 fotos del vehículo.',
-            })
+            return render(request, 'gestion_vehiculos.html', {
+            'error': 'Debes subir exactamente 4 fotos del vehículo.',
+            'gestion_vehiculos': Vehiculo.objects.all()
+             })
 
         vehiculo = Vehiculo.objects.create(
             placa_vehiculo=placa,
@@ -111,9 +113,14 @@ def crear_vehiculo(request):
         for imagen in fotos:
             FotoVehiculo.objects.create(vehiculo=vehiculo, imagen=imagen)
 
-        return redirect('gestion_vehiculos')  # ajusta esto a tu URL de redirección
+        messages.success(request, 'Vehículo creado exitosamente.')  # * Mensaje de éxito al crear un vehículo
+        return redirect('gestion_vehiculos')  # * ajusta esto a tu URL de redirección
     else:
-        return render(request, 'gestion_vehiculos.html')
+        return render(request, 'gestion_vehiculos.html', {
+            'error': os.error,
+            'gestion_vehiculos': Vehiculo.objects.all(),
+            'abrir_modal': True
+        })
 
 
 
@@ -124,12 +131,27 @@ def detalle_vehiculo(request, id):
 def eliminar_vehiculo(request, id):
     vehiculo = get_object_or_404(Vehiculo, id=id)
 
-    # Eliminar cada imagen físicamente
+    # ~ Eliminar cada imagen físicamente
     for foto in vehiculo.fotos.all():
         if foto.imagen and os.path.isfile(foto.imagen.path):
             os.remove(foto.imagen.path)
 
-    # Eliminar el vehículo (esto elimina los registros de FotoVehiculo por CASCADE)
+    # ~ Eliminar el vehículo (esto elimina los registros de FotoVehiculo por CASCADE)
     vehiculo.delete()
-    messages.success(request, 'Vehículo eliminado exitosamente.')  # Mensaje de éxito al eliminar el vehículo
-    return redirect('gestion_vehiculos')  # Cambia esto al nombre de tu vista destino
+    messages.success(request, 'Vehículo eliminado exitosamente.')  # * Mensaje de éxito al eliminar el vehículo
+    return redirect('gestion_vehiculos')  # * Cambia esto al nombre de tu vista destino
+
+def editar_vehiculo(request, id):
+    vehiculo = get_object_or_404(Vehiculo, id=id)
+
+    if request.method == 'POST':
+        vehiculo.placa_vehiculo = request.POST.get('placa_vehiculo')
+        vehiculo.nombre_propietario = request.POST.get('nombre_propietario')
+        vehiculo.marca = request.POST.get('marca')
+        vehiculo.modelo = request.POST.get('modelo')
+        vehiculo.anio = request.POST.get('anio')
+        vehiculo.save()
+        messages.success(request, 'Vehículo editado exitosamente.')  # * Mensaje de éxito al editar el vehículo
+        return redirect('detalle_vehiculo', id=vehiculo.id)
+
+    return render(request, 'editar_vehiculo.html', {'vehiculo': vehiculo})

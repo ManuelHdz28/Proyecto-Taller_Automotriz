@@ -32,7 +32,9 @@
                         <td>{{ vehiculo.modelo }}</td>
                         <td>{{ vehiculo.anio }}</td>
                         <td>
-                            <a href="" class="btn btn-warning">Editar</a>
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Editar
+                            </button>
 
                             <a href="Javascript:void(0)" class="btn btn-danger" onclick="eliminarFila('{% url 'eliminar_vehiculo' vehiculo.id %}', 'Vehículos')">Eliminar</a>
                         </td>
@@ -62,4 +64,50 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para editar vehículo -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Vehiculos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'editar_vehiculo' vehiculo.id %}" id="formulario-vehiculo" enctype="multipart/form-data"> 
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="placa_vehiculo" class="form-label">Placa Vehiculo</label>
+        <input type="text" class="form-control" id="placa_vehiculo" name="placa_vehiculo" placeholder="Ingrese la Placa del Vehiculo" value="{{ vehiculo.placa_vehiculo }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="propietario" class="form-label">Propietario</label>
+        <input type="text" class="form-control" id="propietario" name="nombre_propietario" placeholder="Ingrese el Nombre del Propietario" value="{{ vehiculo.nombre_propietario }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="marca" class="form-label">Marca</label>
+        <input type="text" class="form-control" id="marca" name="marca" placeholder="Ingrese la Marca del Vehiculo" value="{{ vehiculo.marca }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="modelo" class="form-label">Modelo</label>
+        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ingrese el Modelo del Vehiculo" value="{{ vehiculo.modelo }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="anio" class="form-label">Año</label>
+        <input type="number" class="form-control" id="anio" name="anio" placeholder="Ingrese el Año del Vehiculo" value="{{ vehiculo.anio }}" required>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Editar Vehiculo</button>
+    </div>
+</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/validate.js' %}"></script>
+
+
 {% endblock %}

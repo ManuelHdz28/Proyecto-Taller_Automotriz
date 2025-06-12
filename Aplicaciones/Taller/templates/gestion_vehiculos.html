@@ -100,7 +100,7 @@
     </div>
     <div class="mb-3">
         <label for="fotos" class="form-label">Fotos del Vehículo (3 normales + 1 de placas)</label>
-        <input type="file" class="form-control" id="fotos" name="fotos[]" accept="image/*" multiple required>
+        <input type="file" class="form-control" id="fotos" name="fotos" accept="image/*" multiple required>
         <div class="form-text">Debes subir exactamente 4 imágenes.</div>
     </div>
 
@@ -109,12 +109,21 @@
         <button type="submit" class="btn btn-primary">Agregar Vehiculo</button>
     </div>
 </form>
+{% if error %}
+<div class="alert alert-danger mt-2">{{ error }}</div>
+{% endif %}
       </div>
     </div>
   </div>
 </div>
 <script src="{% static 'js/tabla.js' %}"></script>
 <script src="{% static 'js/validate.js' %}"></script>
-
+{% if abrir_modal %}
+<script>
+    var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+    modal.show();
+</script>
+{% endif %}
 
 {% endblock %}
+
