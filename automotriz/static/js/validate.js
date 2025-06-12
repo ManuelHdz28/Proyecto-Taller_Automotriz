@@ -16,7 +16,7 @@ $("#formulario-repuesto").validate({
         },
         cantidad_disponible: {
             required: true,
-            digits: true, // ← esto valida enteros
+            digits: true, //* ← esto valida enteros
             min: 1
         }
     },
