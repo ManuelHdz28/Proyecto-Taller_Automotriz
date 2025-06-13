@@ -30,7 +30,7 @@ Repuestos
                         <td>{{ tipos.nombre_mantenimiento }}</td>
                         <td>${{ tipos.precio_mantenimiento }}</td>
                         <td>
-                            <a href="" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'editar_tipo_mantenimiento' tipos.id_mantenimiento %}" class="btn btn-warning">Editar</a>
 
                             <a href="Javascript:void(0)" class="btn btn-danger" onclick="eliminarTipoMantenimiento('{% url 'eliminar_tipo_mantenimiento' tipos.id_mantenimiento %}', 'tipos de mantenimiento')">Eliminar</a>
                         </td>

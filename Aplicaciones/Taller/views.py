@@ -190,7 +190,25 @@ def eliminar_tipo_mantenimiento(request, id_mantenimiento):
     except TipoMantenimiento.DoesNotExist:
         return render(request, 'error.html', {'message': 'Tipo de mantenimiento no encontrado.'})  # * Manejo de error si el tipo de mantenimiento no existe
     
-
+def editar_tipo_mantenimiento(request, id_mantenimiento):
     
+    
+    """
+     * Edita un tipo de mantenimiento existente.
+    """
+    try:
+        tipo_mantenimiento = TipoMantenimiento.objects.get(id_mantenimiento=id_mantenimiento)
+
+        if request.method == 'POST':
+            tipo_mantenimiento.nombre_mantenimiento = request.POST.get('nombre_mantenimiento')
+            tipo_mantenimiento.precio_mantenimiento = request.POST.get('precio_mantenimiento')
+            tipo_mantenimiento.save()
+            messages.success(request, 'Tipo de mantenimiento editado exitosamente.')  # * Mensaje de éxito al editar un tipo de mantenimiento
+            return redirect('tipos_mantenimiento')
+
+        return render(request, 'editar_tipo_mantenimiento.html', {'tipo_mantenimiento': tipo_mantenimiento})
+
+    except TipoMantenimiento.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Tipo de mantenimiento no encontrado.'})  # * Manejo de error si el tipo de mantenimiento no existe
 
     

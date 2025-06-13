@@ -1,0 +1,54 @@
+{% extends "plantilla.html" %} 
+{% load static %}
+
+{% block title %} Editar Tipos de Mantenimiento {% endblock title %}
+
+
+
+{% block content %}
+    
+
+
+
+<!-- Modal editar tipos de mantenimiento -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Tipo de Mantenimiento</h1>
+
+      </div>
+      <div class="modal-body">
+            <form method="post" action="{% url 'editar_tipo_mantenimiento' tipo_mantenimiento.id_mantenimiento %}"> 
+            {% csrf_token %}
+            
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nombre_mantenimiento" class="form-label">Nombre del Tipo de Mantenimiento</label>
+                <input type="text" class="form-control" id="nombre_mantenimiento" name="nombre_mantenimiento" value="{{ tipo_mantenimiento.nombre_mantenimiento }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio $</label>
+                <input type="number" step="0.01" placeholder="0" class="form-control" value="{{ tipo_mantenimiento.precio_mantenimiento|stringformat:'f' }}" id="precio" name="precio" required>
+            </div>
+            
+            <div class="modal-footer">
+                <a href="{% url 'tipos_mantenimiento' %}" type="button" class="btn btn-secondary" >Cancelar</a>
+                <button type="submit" class="btn btn-primary">Actualizar Tipo de Mantenimiento</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Script para abrir el modal al cargar la página
+    const modal = document.getElementById("exampleModal");
+    document.addEventListener("DOMContentLoaded", () => { 
+        const myModal = new bootstrap.Modal(modal)
+        myModal.show();
+    });
+</script>
+{% endblock content %} 
