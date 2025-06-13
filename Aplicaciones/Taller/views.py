@@ -298,20 +298,36 @@ def editar_mantenimiento(request, id_mantenimiento):
     """
      * Edita un mantenimiento existente.
     """
-    try:
-        mantenimiento = Mantenimiento.objects.get(id_mantenimientov=id_mantenimiento)
+    mantenimiento = get_object_or_404(Mantenimiento, id_mantenimientov=id_mantenimiento)
 
-        if request.method == 'POST':
-            mantenimiento.vehiculo = request.POST.get('vehiculo')
-            mantenimiento.tipo_mantenimiento = request.POST.get('tipo_mantenimiento')
-            mantenimiento.fecha_mantenimiento = request.POST.get('fecha_mantenimiento')
-            mantenimiento.save()
-            messages.success(request, 'Mantenimiento editado exitosamente.')  # * Mensaje de éxito al editar un mantenimiento
-            return redirect('mantenimientos')
+    if request.method == 'POST':
+        vehiculo_id = request.POST.get('vehiculo')
+        tipo_id = request.POST.get('tipo_mantenimiento')
+        fecha = request.POST.get('fecha_mantenimiento')
+        precio_total = request.POST.get('precioTotal')
+        repuestos_ids = request.POST.getlist('repuestos')
 
-        return render(request, 'editar_mantenimiento.html', {'mantenimiento': mantenimiento})
+        # * Actualizar relaciones ForeignKey
+        mantenimiento.vehiculo = get_object_or_404(Vehiculo, id=vehiculo_id)
+        mantenimiento.tipo_mantenimiento = get_object_or_404(TipoMantenimiento, id_mantenimiento=tipo_id)
+        mantenimiento.fecha_mantenimiento = fecha
+        mantenimiento.precioTotal = precio_total
+        mantenimiento.save()
 
-    except Mantenimiento.DoesNotExist:
-        return render(request, 'error.html', {'message': 'Mantenimiento no encontrado.'})  # * Manejo de error si el mantenimiento no existe
+        # * Actualizar relación ManyToMany
+        mantenimiento.Repuestos.set(Repuesto.objects.filter(id_repuesto__in=repuestos_ids))
 
+        messages.success(request, 'Mantenimiento editado exitosamente.')
+        return redirect('mantenimientos')
+
+    # * Repuestos seleccionados para el template
+    repuestos_seleccionados = mantenimiento.Repuestos.values_list('id_repuesto', flat=True)
+
+    return render(request, 'editar_mantenimiento.html', {
+        'mantenimiento': mantenimiento,
+        'vehiculos': Vehiculo.objects.all(),
+        'tipos_mantenimiento': TipoMantenimiento.objects.all(),
+        'repuestos': Repuesto.objects.all(),
+        'repuestos_seleccionados': repuestos_seleccionados,
+    })
     

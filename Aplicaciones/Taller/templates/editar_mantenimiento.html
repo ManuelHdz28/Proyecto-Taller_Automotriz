@@ -1,0 +1,139 @@
+{% extends "plantilla.html" %} 
+{% load static %}
+
+{% block title %} Editar Mantenimiento {% endblock title %}
+
+
+
+{% block content %}
+    
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Mantenimiento</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'editar_mantenimiento' mantenimiento.id_mantenimientov %}" id="formulario-mantenimiento"> 
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="vehiculo" class="form-label">Vehículo</label>
+                <select class="form-select" id="vehiculo" name="vehiculo" required>
+                    <option value="">Seleccione un vehículo</option>
+                    {% if vehiculos %} 
+                        {% if vehiculos|length > 0 %}
+                            {% for vehiculo in vehiculos %}
+                                <option value="{{ vehiculo.id }}" {% if vehiculo.id == mantenimiento.vehiculo.id %}selected{% endif %}>
+                                    {{ vehiculo.placa_vehiculo }}
+                                </option>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <option value="">No hay vehículos disponibles</option>
+                    {% endif %}
+                    
+                </select>
+                        
+
+            </div>
+            <div class="mb-3">
+                <label for="tipo_mantenimiento" class="form-label">Tipo de Mantenimiento</label>
+                <select class="form-select" id="tipo_mantenimiento" name="tipo_mantenimiento" required>
+                    <option value="">Seleccione un tipo de mantenimiento</option>
+                    {% for tipo in tipos_mantenimiento %}
+                    <option value="{{ tipo.id_mantenimiento }}" data-precio="{{ tipo.precio_mantenimiento }}"
+                        {% if tipo.id_mantenimiento == mantenimiento.tipo_mantenimiento.id_mantenimiento %}selected{% endif %}>
+                        {{ tipo.nombre_mantenimiento }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="repuestos" class="form-label">Repuestos</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="repuestos" name="repuestos" multiple required>
+                        <option value="">Seleccione un repuesto</option>
+                        {% for repuesto in repuestos %}
+                            <option value="{{ repuesto.id_repuesto }}" data-precio="{{ repuesto.precio }}"
+                                {% if repuesto.id_repuesto in repuestos_seleccionados %}selected{% endif %}>
+                                {{ repuesto.nombre_repuesto }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarRepuesto">Agregar Repuesto</button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="fecha_mantenimiento" class="form-label">Fecha del Mantenimiento</label>
+                <input type="date" class="form-control" id="fecha_mantenimiento" name="fecha_mantenimiento" required value="{{ mantenimiento.fecha_mantenimiento|date:'Y-m-d' }}">
+            </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="precioTotal" class="form-label">Costo Total $</label>
+                <input type="number" placeholder="0" class="form-control" id="precioTotal" name="precioTotal" required value="{{ mantenimiento.precioTotal }}">
+            </div>
+            
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+
+        </form>
+        <script>
+            const tipoMantenimientoSelect = document.getElementById('tipo_mantenimiento');
+            const repuestosSelect = document.getElementById('repuestos');
+            const precioTotalInput = document.getElementById('precioTotal');
+
+            function calcularTotal() {
+        let total = 0;
+
+        // Precio del tipo de mantenimiento
+        const selectedMantenimiento = tipoMantenimientoSelect.selectedOptions[0];
+        if (selectedMantenimiento && selectedMantenimiento.dataset.precio) {
+            total += parseFloat(selectedMantenimiento.dataset.precio);
+        }
+
+        // Precio de los repuestos seleccionados
+        const selectedRepuestos = Array.from(repuestosSelect.selectedOptions);
+        selectedRepuestos.forEach(option => {
+            if (option.dataset.precio) {
+                total += parseFloat(option.dataset.precio);
+            }
+        });
+
+        // Mostrar el total en el input
+        precioTotalInput.value = total.toFixed(2);
+    }
+
+    // Eventos para recálculo cuando el usuario cambia opciones
+    tipoMantenimientoSelect.addEventListener('change', calcularTotal);
+    repuestosSelect.addEventListener('change', calcularTotal);
+
+    // ⚠️ Ejecutar cálculo automáticamente al cargar la página con datos ya seleccionados
+    document.addEventListener("DOMContentLoaded", calcularTotal);
+
+    // Eventos
+    tipoMantenimientoSelect.addEventListener('change', calcularTotal);
+    repuestosSelect.addEventListener('change', calcularTotal);
+</script>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    // Script para abrir el modal al cargar la página
+    const modal = document.getElementById("exampleModal");
+    document.addEventListener("DOMContentLoaded", () => { 
+        const myModal = new bootstrap.Modal(modal)
+        myModal.show();
+    });
+</script>
+{% endblock content %} 
+{% block scripts %}
+
+    <script src="{% static 'js/validate.js' %}"></script>
+{% endblock scripts %}
