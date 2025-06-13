@@ -4,6 +4,7 @@ from .models import Repuesto
 from .models import Vehiculo  # * Importa el modelo Vehiculo para la gestión de vehículos
 from .models import FotoVehiculo  # * Importa el modelo FotoVehiculo para manejar las fotos de los vehículos
 from .models import TipoMantenimiento  # * Importa el modelo TipoMantenimiento para manejar los tipos de mantenimiento
+from .models import Mantenimiento  # * Importa el modelo Mantenimiento para manejar los mantenimientos
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
@@ -210,5 +211,107 @@ def editar_tipo_mantenimiento(request, id_mantenimiento):
 
     except TipoMantenimiento.DoesNotExist:
         return render(request, 'error.html', {'message': 'Tipo de mantenimiento no encontrado.'})  # * Manejo de error si el tipo de mantenimiento no existe
+    
+    
+def mantenimientos(request):
+    mantenimientosdbb = Mantenimiento.objects.all()
+    vehiculos = Vehiculo.objects.all()
+    tipos_mantenimiento = TipoMantenimiento.objects.all()
+    repuestos = Repuesto.objects.all()
+
+    return render(request, 'mantenimientos.html', {
+        'mantenimientos': mantenimientosdbb,
+        'vehiculos': vehiculos, 
+        'tipos_mantenimiento': tipos_mantenimiento,
+        'repuestos': repuestos
+    })
+
+
+def crear_repuesto(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre_repuesto')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        cantidad_disponible = request.POST.get('cantidad_disponible')
+
+
+        # * Crea un nuevo repuesto en la base de datos
+        Repuesto.objects.create(
+            nombre_repuesto=nombre,
+            descripcion=descripcion,
+            precio=precio,
+            cantidad_disponible=cantidad_disponible
+        )
+        
+        messages.success(request, 'Repuesto creado exitosamente.')  # * Mensaje de éxito al crear un repuesto
+        
+        return redirect('repuestos')
+    else:
+        return render(request, 'repuestos.html')
+    
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Vehiculo, TipoMantenimiento, Repuesto, Mantenimiento
+
+def crear_mantenimiento(request):
+    if request.method == 'POST':
+        vehiculo_id = request.POST.get('vehiculo')
+        tipo_mantenimiento_id = request.POST.get('tipo_mantenimiento')
+        repuestos_ids = request.POST.getlist('repuestos')
+        fecha_mantenimiento = request.POST.get('fecha_mantenimiento')
+        precio_total = request.POST.get('precioTotal')
+
+        # Obtener objetos relacionados usando claves correctas
+        vehiculo = get_object_or_404(Vehiculo, id=vehiculo_id)
+        tipo_mantenimiento = get_object_or_404(TipoMantenimiento, id_mantenimiento=tipo_mantenimiento_id)
+        repuestos = Repuesto.objects.filter(id_repuesto__in=repuestos_ids)
+
+        # Crear el mantenimiento (sin asignar repuestos aún)
+        mantenimiento = Mantenimiento.objects.create(
+            vehiculo=vehiculo,
+            tipo_mantenimiento=tipo_mantenimiento,
+            fecha_mantenimiento=fecha_mantenimiento,
+            precioTotal=precio_total
+        )
+
+        # Asignar repuestos después de guardar
+        mantenimiento.Repuestos.set(repuestos)
+
+        messages.success(request, '¡Mantenimiento creado exitosamente!')
+        return redirect('mantenimientos')
+    
+    return render(request, 'mantenimiento.html')
+
+def eliminar_mantenimiento(request, id_mantenimiento):
+    """
+     * Elimina un mantenimiento por su ID.
+    """
+    try:
+        mantenimiento = Mantenimiento.objects.get(id_mantenimientov=id_mantenimiento)
+        mantenimiento.delete()
+        messages.success(request, '¡Mantenimiento eliminado correctamente!')  # * Mensaje de éxito al eliminar un mantenimiento
+        return redirect('mantenimientos')
+    except Mantenimiento.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Mantenimiento no encontrado.'})  # * Manejo de error si el mantenimiento no existe
+    
+def editar_mantenimiento(request, id_mantenimiento):
+    """
+     * Edita un mantenimiento existente.
+    """
+    try:
+        mantenimiento = Mantenimiento.objects.get(id_mantenimientov=id_mantenimiento)
+
+        if request.method == 'POST':
+            mantenimiento.vehiculo = request.POST.get('vehiculo')
+            mantenimiento.tipo_mantenimiento = request.POST.get('tipo_mantenimiento')
+            mantenimiento.fecha_mantenimiento = request.POST.get('fecha_mantenimiento')
+            mantenimiento.save()
+            messages.success(request, 'Mantenimiento editado exitosamente.')  # * Mensaje de éxito al editar un mantenimiento
+            return redirect('mantenimientos')
+
+        return render(request, 'editar_mantenimiento.html', {'mantenimiento': mantenimiento})
+
+    except Mantenimiento.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Mantenimiento no encontrado.'})  # * Manejo de error si el mantenimiento no existe
 
     

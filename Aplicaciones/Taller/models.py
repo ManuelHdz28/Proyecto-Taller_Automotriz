@@ -43,3 +43,15 @@ class TipoMantenimiento(models.Model):
     def __str__(self):
         return self.nombre_mantenimiento  # ~ Devuelve el nombre del tipo de mantenimiento como representación en cadena
     
+class Mantenimiento(models.Model):
+    id_mantenimientov = models.AutoField(primary_key=True)  # ~ Campo de clave primaria autoincremental
+    vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, related_name='mantenimientos')  # * Relación con el modelo Vehiculo
+    tipo_mantenimiento = models.ForeignKey(TipoMantenimiento, on_delete=models.CASCADE, related_name='mantenimientos')  # * Relación con el modelo TipoMantenimiento
+    Repuestos = models.ManyToManyField(Repuesto, blank=True, related_name='mantenimientos')  # * Relación con el modelo Repuesto, permitiendo múltiples repuestos por mantenimiento
+    fecha_mantenimiento = models.DateField()  # * Fecha del mantenimiento
+    precioTotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # * Precio total del mantenimiento
+
+    def __str__(self):
+        return f"Mantenimiento de {self.vehiculo} - {self.tipo_mantenimiento}"  # ~ Devuelve una representación del mantenimiento como cadena
+
+    

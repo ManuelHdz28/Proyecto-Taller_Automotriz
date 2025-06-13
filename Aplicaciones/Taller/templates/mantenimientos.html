@@ -1,0 +1,170 @@
+{% extends 'plantilla.html' %} {% load static %}
+{% block title %}
+Mantenimiento de Vehiculos
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mt-4">Mantenimiento de Vehiculos</h1>
+
+
+        <button type="button" class="btn btn-primary mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            + Nuevo Mantenimiento
+        </button>
+
+        <br>
+        {% if mantenimientos %}
+        <div class="table-responsive" mt-4>
+            {% if mantenimientos %}
+            <table class="table table-striped table-hover text-center mt-5" id="tabla-mantenimientos">
+                <thead>
+                    <tr>
+                        <th>Vehiculos</th>
+                        <th>tipos_mantenimiento</th>
+                        <th>repuesto</th>
+                        <th>fecha del mantenimiento</th>
+                        <th>costo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mantenimiento in mantenimientos %}
+                    <tr>
+                        <td>{{ mantenimiento.vehiculo }}</td>
+                        <td>{{ mantenimiento.tipo_mantenimiento }}</td>
+                        <td>
+                            {% for repuesto in mantenimiento.Repuestos.all %}
+                                {{ repuesto.nombre_repuesto }}<br>
+                            {% endfor %}
+                        </td>
+                        <td>{{ mantenimiento.fecha_mantenimiento }}</td>
+                        <td>${{ mantenimiento.precioTotal }}</td>
+                        <td>
+                            <a href="{% url 'editar_mantenimiento' mantenimiento.id_mantenimientov %}" class="btn btn-warning">Editar</a>
+
+                            <a href="Javascript:void(0)" class="btn btn-danger" onclick="eliminarFila('{% url 'eliminar_mantenimiento' mantenimiento.id_mantenimientov %}', 'Mantenimientos')">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info text-center mt-4" role="alert">
+                No hay mantenimientos disponibles en este momento.
+            </div>
+            {% endif %}
+        
+    
+    {% else %}
+        <div class="alert alert-warning text-center mt-4" role="alert">
+            No se encontraron mantenimientos.
+        </div>
+    {% endif %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Mantenimiento</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'crear_mantenimiento' %}" id="formulario-mantenimiento"> 
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="vehiculo" class="form-label">Vehículo</label>
+                <select class="form-select" id="vehiculo" name="vehiculo" required>
+                    <option value="">Seleccione un vehículo</option>
+                    {% if vehiculos %} 
+                        {% if vehiculos|length > 0 %}
+                            {% for vehiculo in vehiculos %}
+                                <option value="{{ vehiculo.id }}">{{ vehiculo.placa_vehiculo }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <option value="">No hay vehículos disponibles</option>
+                    {% endif %}
+                    
+                </select>
+                        
+
+            </div>
+            <div class="mb-3">
+                <label for="tipo_mantenimiento" class="form-label">Tipo de Mantenimiento</label>
+                <select class="form-select" id="tipo_mantenimiento" name="tipo_mantenimiento" required>
+                    <option value="">Seleccione un tipo de mantenimiento</option>
+                    {% for tipo in tipos_mantenimiento %}
+                    <option value="{{ tipo.id_mantenimiento }}" data-precio="{{ tipo.precio_mantenimiento }}">{{ tipo.nombre_mantenimiento }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="repuestos" class="form-label">Repuestos</label>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="repuestos" name="repuestos" multiple required>
+                        <option value="">Seleccione un repuesto</option>
+                        {% for repuesto in repuestos %}
+                            <option value="{{ repuesto.id_repuesto }}" data-precio="{{ repuesto.precio }}">{{ repuesto.nombre_repuesto }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarRepuesto">Agregar Repuesto</button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="fecha_mantenimiento" class="form-label">Fecha del Mantenimiento</label>
+                <input type="date" class="form-control" id="fecha_mantenimiento" name="fecha_mantenimiento" required>
+            </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="precioTotal" class="form-label">Costo Total $</label>
+                <input type="number" placeholder="0" class="form-control" id="precioTotal" name="precioTotal" required>
+            </div>
+            
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Agregar Repuesto</button>
+            </div>
+
+        </form>
+        <script>
+            const tipoMantenimientoSelect = document.getElementById('tipo_mantenimiento');
+            const repuestosSelect = document.getElementById('repuestos');
+            const precioTotalInput = document.getElementById('precioTotal');
+
+            function calcularTotal() {
+                let total = 0;
+
+                // Precio del tipo de mantenimiento
+                const selectedMantenimiento = tipoMantenimientoSelect.selectedOptions[0];
+                if (selectedMantenimiento && selectedMantenimiento.dataset.precio) {
+                    total += parseFloat(selectedMantenimiento.dataset.precio);
+                }
+
+                // Precio de los repuestos seleccionados
+                const selectedRepuestos = Array.from(repuestosSelect.selectedOptions);
+                selectedRepuestos.forEach(option => {
+                if (option.dataset.precio) {
+                    total += parseFloat(option.dataset.precio);
+                }
+            });
+
+            // Mostrar el total en el input
+            precioTotalInput.value = total.toFixed(2);
+        }
+
+    // Eventos
+    tipoMantenimientoSelect.addEventListener('change', calcularTotal);
+    repuestosSelect.addEventListener('change', calcularTotal);
+</script>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/tabla.js' %}"></script>
+<script src="{% static 'js/validate.js' %}"></script>
+
+{% endblock content %}
