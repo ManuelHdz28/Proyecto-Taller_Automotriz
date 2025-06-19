@@ -79,14 +79,16 @@ $("#formulario-tipos").validate({
   rules: {
     nombre_mantenimiento: {
       required: true,
-      minlength: 3,
       maxlength: 100,
+      minlength: 3,
+      uniqueTipoMantenimiento: true, // * Validación personalizada para nombres únicos
     },
     precio_mantenimiento: {
       required: true,
       number: true,
       min: 0.01,
     },
+    
   },
   messages: {
     nombre_mantenimiento: {
@@ -98,7 +100,8 @@ $("#formulario-tipos").validate({
       required: "Por favor, ingrese un precio.",
       number: "El precio debe ser un número.",
       min: "El precio debe ser al menos 0.01.",
-    },
+    }
+    
   },
   errorClass: "invalid-feedback",
   errorElement: "div",
@@ -199,3 +202,48 @@ $.validator.addMethod(
   },
   "Debes subir exactamente 4 imágenes."
 );
+
+$("#formulario-mantenimiento").validate({
+  rules: {
+    fecha_mantenimiento: {
+      required: true,
+      date: true,
+    },
+    tipo_mantenimiento: {
+      required: true,
+    },
+    vehiculo: {
+      required: true,
+    },
+    repuestos: {
+      required: true,
+    },
+    
+  },
+    messages: {
+        fecha_mantenimiento: {
+        required: "Por favor, ingrese la fecha del mantenimiento.",
+        date: "Por favor, ingrese una fecha válida.",
+        },
+        tipo_mantenimiento: {
+        required: "Por favor, seleccione un tipo de mantenimiento.",
+        },
+        vehiculo: {
+        required: "Por favor, seleccione un vehículo.",
+        },
+        repuestos: {
+        required: "Por favor, seleccione al menos un repuesto.",
+       },
+    },
+    errorClass: "invalid-feedback",
+  errorElement: "div",
+  highlight: function (element) {
+    $(element).addClass("is-invalid");
+  },
+  unhighlight: function (element) {
+    $(element).removeClass("is-invalid");
+  },
+  submitHandler: function (form) {
+    form.submit(); // * Si todo está validado correctamente
+  },
+});
