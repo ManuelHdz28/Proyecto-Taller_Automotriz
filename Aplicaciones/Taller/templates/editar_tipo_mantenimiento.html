@@ -19,7 +19,7 @@
 
       </div>
       <div class="modal-body">
-            <form method="post" action="{% url 'editar_tipo_mantenimiento' tipo_mantenimiento.id_mantenimiento %}"> 
+            <form method="post" action="{% url 'editar_tipo_mantenimiento' tipo_mantenimiento.id_mantenimiento %}" id="formulario-tipos"> 
             {% csrf_token %}
             
             {% csrf_token %}

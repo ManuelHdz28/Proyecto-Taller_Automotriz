@@ -104,7 +104,7 @@ Mantenimiento de Vehiculos
                 <label for="repuestos" class="form-label">Repuestos</label>
                 <div class="input-group mb-3">
                     <select class="form-select" id="repuestos" name="repuestos" multiple required>
-                        <option value="">Seleccione un repuesto</option>
+                        
                         {% for repuesto in repuestos %}
                             <option value="{{ repuesto.id_repuesto }}" data-precio="{{ repuesto.precio }}">{{ repuesto.nombre_repuesto }}</option>
                         {% endfor %}
