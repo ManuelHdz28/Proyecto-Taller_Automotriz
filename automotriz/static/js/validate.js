@@ -1,3 +1,6 @@
+// & validación de formularios con jQuery Validate
+
+// ^ Validación del formulario de repuestos
 $("#formulario-repuesto").validate({
   rules: {
     nombre_repuesto: {
@@ -19,17 +22,7 @@ $("#formulario-repuesto").validate({
       digits: true, //* ← esto valida enteros
       min: 1,
     },
-    nombre_mantenimiento: {
-      required: true,
-      minlength: 3,
-      maxlength: 100,
-    },
-
-    precio_mantenimiento: {
-      required: true,
-      number: true,
-      min: 0.01,
-    },
+    
   },
   messages: {
     nombre_repuesto: {
@@ -51,16 +44,7 @@ $("#formulario-repuesto").validate({
       digits: "Debe ser un número entero.",
       min: "Debe ser al menos 1.",
     },
-    nombre_mantenimiento: {
-      required: "Por favor, ingrese el nombre del tipo de mantenimiento.",
-      minlength: "Debe tener al menos 3 caracteres.",
-      maxlength: "No debe exceder 100 caracteres.",
-    },
-    precio_mantenimiento: {
-      required: "Por favor, ingrese un precio.",
-      number: "El precio debe ser un número.",
-      min: "El precio debe ser al menos 0.01.",
-    },
+    
   },
   errorClass: "invalid-feedback",
   errorElement: "div",
@@ -75,19 +59,22 @@ $("#formulario-repuesto").validate({
   },
 });
 
+
+
+// ^ Validación del formulario de tipos de mantenimiento
 $("#formulario-tipos").validate({
   rules: {
     nombre_mantenimiento: {
       required: true,
-      maxlength: 100,
       minlength: 3,
-      uniqueTipoMantenimiento: true, // * Validación personalizada para nombres únicos
+      maxlength: 100,
     },
     precio_mantenimiento: {
       required: true,
       number: true,
       min: 0.01,
     },
+    
     
   },
   messages: {
@@ -97,10 +84,11 @@ $("#formulario-tipos").validate({
       maxlength: "No debe exceder 100 caracteres.",
     },
     precio_mantenimiento: {
-      required: "Por favor, ingrese un precio.",
-      number: "El precio debe ser un número.",
-      min: "El precio debe ser al menos 0.01.",
-    }
+      required: "Por favor, ingrese el precio.",
+      number: "Debe ser un número válido.",
+      min: "El precio debe ser mayor que 0.",
+    },
+    
     
   },
   errorClass: "invalid-feedback",
@@ -116,6 +104,7 @@ $("#formulario-tipos").validate({
   },
 });
 
+// ^ Validación del formulario de vehículos
 $("#formulario-vehiculo").validate({
   rules: {
     placa_vehiculo: {
@@ -195,6 +184,7 @@ $("#formulario-vehiculo").validate({
   },
 });
 
+// ^ Método personalizado para validar que se suban exactamente 4 archivos
 $.validator.addMethod(
   "exactlyFourFiles",
   function (value, element) {
@@ -203,6 +193,7 @@ $.validator.addMethod(
   "Debes subir exactamente 4 imágenes."
 );
 
+// ^ Validación del formulario de mantenimiento
 $("#formulario-mantenimiento").validate({
   rules: {
     fecha_mantenimiento: {

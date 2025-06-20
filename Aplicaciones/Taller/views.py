@@ -1,23 +1,28 @@
-# ! views.py Aplicaciones/Taller
-from django.shortcuts import render
-from .models import Repuesto
+from django.shortcuts import render # * Importa render para renderizar plantillas HTML
+from .models import Repuesto # * Importa el modelo Repuesto para la gestión de repuestos
 from .models import Vehiculo  # * Importa el modelo Vehiculo para la gestión de vehículos
 from .models import FotoVehiculo  # * Importa el modelo FotoVehiculo para manejar las fotos de los vehículos
 from .models import TipoMantenimiento  # * Importa el modelo TipoMantenimiento para manejar los tipos de mantenimiento
 from .models import Mantenimiento  # * Importa el modelo Mantenimiento para manejar los mantenimientos
-from django.shortcuts import redirect
-from django.contrib import messages
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect # * Importa redirect para redirigir a otras vistas
+from django.contrib import messages # * Importa messages para mostrar mensajes de éxito o error al usuario
+from django.shortcuts import render, get_object_or_404 # * Importa render y get_object_or_404 para manejar vistas y obtener objetos de la base de datos
+from django.http import JsonResponse  # * Importa JsonResponse para manejar respuestas JSON
 import os  # * Importa el módulo os para manejar archivos del sistema operativo
 
+# & views.py Aplicaciones/Taller
 
 # Create your views here.
+
+# ^ Vista de índice
 def index(request):
     """
      * Render the index page of the Taller application.
     """
     return render(request, 'index.html')
 
+# ^ Vista de repuestos
+# ~ Esta vista maneja la visualización y gestión de repuestos en el taller.
 def repuestos(request):
     
     repuestosdbb = Repuesto.objects.all()  # * Recibe todos los repuestos de la base de datos
@@ -27,6 +32,8 @@ def repuestos(request):
     """
     return render(request, 'repuestos.html', {'repuestos': repuestosdbb})  # * Pasa los repuestos a la plantilla 'repuestos.html' 
 
+# ^ Vista de gestión de vehículos
+# ~ Esta vista maneja la visualización y gestión de vehículos en el taller.
 def gestion_vehiculos(request):
 
     gestionvehiculos = Vehiculo.objects.all()   # * Recibe todos los vehículos de la base de datos para la gestión de vehículos
@@ -36,6 +43,8 @@ def gestion_vehiculos(request):
     """
     return render(request, 'gestion_vehiculos.html', {'gestion_vehiculos': gestionvehiculos})  # * Renderiza la plantilla 'gestion_vehiculos.html'
 
+# ^ Vista para crear un nuevo repuesto
+# ~ Esta vista maneja la creación de un nuevo repuesto en el taller.
 def crear_repuesto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_repuesto')
@@ -57,6 +66,8 @@ def crear_repuesto(request):
     else:
         return render(request, 'repuestos.html')
 
+# ^ Vista para eliminar un repuesto por su ID
+# ~ Esta vista maneja la eliminación de un repuesto específico de la base de datos.
 def eliminar_repuesto(request, id_repuesto): # * Vista para eliminar una carrera por su ID
     # * Se busca la carrera por su ID y se elimina
     try:
@@ -66,7 +77,9 @@ def eliminar_repuesto(request, id_repuesto): # * Vista para eliminar una carrera
         return redirect('/repuestos')
     except Repuesto.DoesNotExist:
         return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
-        
+
+# ^ Vista para editar un repuesto por su ID
+# ~ Esta vista maneja la edición de un repuesto específico en la base de datos.     
 def editar_repuesto(request, id_repuesto):
     """
      * Edita un repuesto existente.
@@ -87,7 +100,9 @@ def editar_repuesto(request, id_repuesto):
     
     except Repuesto.DoesNotExist:
         return render(request, 'error.html', {'message': 'Repuesto no encontrado.'})  # * Manejo de error si el repuesto no existe
-    
+
+# ^ Vista para crear un nuevo vehículo
+# ~ Esta vista maneja la creación de un nuevo vehículo en el taller. 
 def crear_vehiculo(request):
     if request.method == 'POST':
         placa = request.POST.get('placa_vehiculo')  #* ← obtener la placa
@@ -125,11 +140,14 @@ def crear_vehiculo(request):
         })
 
 
-
+# ^ Vista para mostrar los detalles de un vehículo por su ID
+# ~ Esta vista maneja la visualización de los detalles de un vehículo específico, incluyendo sus fotos.
 def detalle_vehiculo(request, id):
     vehiculo = get_object_or_404(Vehiculo, id=id)
     return render(request, 'detalle_vehiculo.html', {'vehiculo': vehiculo})
 
+# ^ Vista para eliminar un vehículo por su ID
+# ~ Esta vista maneja la eliminación de un vehículo específico de la base de datos, incluyendo
 def eliminar_vehiculo(request, id):
     vehiculo = get_object_or_404(Vehiculo, id=id)
 
@@ -143,6 +161,8 @@ def eliminar_vehiculo(request, id):
     messages.success(request, 'Vehículo eliminado exitosamente.')  # * Mensaje de éxito al eliminar el vehículo
     return redirect('gestion_vehiculos')  # * Cambia esto al nombre de tu vista destino
 
+# ^ Vista para editar un vehículo por su ID
+# ~ Esta vista maneja la edición de un vehículo específico en la base de datos.
 def editar_vehiculo(request, id):
     vehiculo = get_object_or_404(Vehiculo, id=id)
 
@@ -158,6 +178,8 @@ def editar_vehiculo(request, id):
 
     return render(request, 'editar_vehiculo.html', {'vehiculo': vehiculo})
 
+# ^ Vista para manejar los tipos de mantenimiento
+# ~ Esta vista maneja la visualización, creación, edición y eliminación de tipos de mantenimiento
 def tipos_mantenimiento(request):
     
     tipos_mantenimiento = TipoMantenimiento.objects.all()  # * Recibe todos los tipos de mantenimiento de la base de datos
@@ -166,6 +188,8 @@ def tipos_mantenimiento(request):
     """
     return render(request, 'tipos_mantenimiento.html', {'tipos_mantenimiento': tipos_mantenimiento})  # * Renderiza la plantilla 'tipos_mantenimiento.html'
 
+# ^ Vista para crear un nuevo tipo de mantenimiento
+# ~ Esta vista maneja la creación de un nuevo tipo de mantenimiento en el taller.
 def crear_tipo_mantenimiento(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_mantenimiento')
@@ -182,6 +206,8 @@ def crear_tipo_mantenimiento(request):
     else:
         return render(request, 'tipos_mantenimiento.html')
 
+# ^ Vista para eliminar un tipo de mantenimiento por su ID
+# ~ Esta vista maneja la eliminación de un tipo de mantenimiento específico de la base de datos
 def eliminar_tipo_mantenimiento(request, id_mantenimiento):
     try:
         tipo_mantenimiento = TipoMantenimiento.objects.get(id_mantenimiento=id_mantenimiento)
@@ -190,7 +216,9 @@ def eliminar_tipo_mantenimiento(request, id_mantenimiento):
         return redirect('tipos_mantenimiento')
     except TipoMantenimiento.DoesNotExist:
         return render(request, 'error.html', {'message': 'Tipo de mantenimiento no encontrado.'})  # * Manejo de error si el tipo de mantenimiento no existe
-    
+
+# ^ Vista para editar un tipo de mantenimiento por su ID
+# ~ Esta vista maneja la edición de un tipo de mantenimiento específico en la base de datos  
 def editar_tipo_mantenimiento(request, id_mantenimiento):
     
     
@@ -212,7 +240,8 @@ def editar_tipo_mantenimiento(request, id_mantenimiento):
     except TipoMantenimiento.DoesNotExist:
         return render(request, 'error.html', {'message': 'Tipo de mantenimiento no encontrado.'})  # * Manejo de error si el tipo de mantenimiento no existe
     
-    
+# ^ Vista para manejar los mantenimientos
+# ~ Esta vista maneja la visualización, creación, edición y eliminación de mantenimientos en el taller.
 def mantenimientos(request):
     mantenimientosdbb = Mantenimiento.objects.all()
     vehiculos = Vehiculo.objects.all()
@@ -226,7 +255,8 @@ def mantenimientos(request):
         'repuestos': repuestos
     })
 
-
+# ^ Vista para crear un nuevo repuesto
+# ~ Esta vista maneja la creación de un nuevo repuesto en el taller.
 def crear_repuesto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_repuesto')
@@ -253,6 +283,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Vehiculo, TipoMantenimiento, Repuesto, Mantenimiento
 
+# ^ Vista para crear un nuevo mantenimiento
+# ~ Esta vista maneja la creación de un nuevo mantenimiento en el taller, incluyendo la asignación de repuestos.
 def crear_mantenimiento(request):
     if request.method == 'POST':
         vehiculo_id = request.POST.get('vehiculo')
@@ -274,7 +306,7 @@ def crear_mantenimiento(request):
             precioTotal=precio_total
         )
 
-        # Asignar repuestos después de guardar
+        # * Asignar repuestos después de guardar
         mantenimiento.Repuestos.set(repuestos)
 
         messages.success(request, '¡Mantenimiento creado exitosamente!')
@@ -282,6 +314,8 @@ def crear_mantenimiento(request):
     
     return render(request, 'mantenimiento.html')
 
+# ^ Vista para eliminar un mantenimiento por su ID
+# ~ Esta vista maneja la eliminación de un mantenimiento específico de la base de datos.
 def eliminar_mantenimiento(request, id_mantenimiento):
     """
      * Elimina un mantenimiento por su ID.
@@ -293,7 +327,9 @@ def eliminar_mantenimiento(request, id_mantenimiento):
         return redirect('mantenimientos')
     except Mantenimiento.DoesNotExist:
         return render(request, 'error.html', {'message': 'Mantenimiento no encontrado.'})  # * Manejo de error si el mantenimiento no existe
-    
+
+# ^ Vista para editar un mantenimiento por su ID
+# ~ Esta vista maneja la edición de un mantenimiento específico en la base de datos, permitiendo actualizar los detalles del mantenimiento y los repuestos asociados.   
 def editar_mantenimiento(request, id_mantenimiento):
     """
      * Edita un mantenimiento existente.
@@ -330,4 +366,11 @@ def editar_mantenimiento(request, id_mantenimiento):
         'repuestos': Repuesto.objects.all(),
         'repuestos_seleccionados': repuestos_seleccionados,
     })
-    
+# ^ Vista para validar el nombre de un tipo de mantenimiento
+# ~ Esta vista maneja la validación del nombre de un tipo de mantenimiento para evitar duplicados.
+def validar_nombre_tipo_mantenimiento(request):
+    nombre = request.GET.get('nombre_mantenimiento', None)
+    print("🔍 Nombre recibido para validar:", nombre)
+    existe = TipoMantenimiento.objects.filter(nombre_mantenimiento__iexact=nombre).exists()
+    print("📦 ¿Existe en la base?:", existe)
+    return JsonResponse({'valid': not existe})
