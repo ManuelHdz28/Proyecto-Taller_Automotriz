@@ -86,17 +86,46 @@
         
     </header>
     
-    {% for messages in messages %}
+    {% for message in messages %}
 
   <script>
+
+    let message = "{{ message }}"; // Asignar el mensaje a una variable
+    console.log(message); // Imprimir el mensaje en la consola
+
+    if (message === "Ya existe un tipo de mantenimiento con ese nombre."){
+        iziToast.error({
+          title: 'ERROR!',
+           message: message,
+         });
+    } else {
+      iziToast.success({
+        title: 'EXITO!',
+        message: message,
+      });
+    }
+
+
+
+
+
+
+
+
+
+
+
+    {% comment %} if messages.tags == 'success' {
         iziToast.success({ 
           title: 'EXITO!',
            message: '{{ messages }}',
          });
+    } else if messages.tags == 'error' {
          iziToast.error({
           title: 'ERROR!',
            message: '{{ messages }}',
          });
+    }  {% endcomment %}
   </script>
     {% endfor %}
 
