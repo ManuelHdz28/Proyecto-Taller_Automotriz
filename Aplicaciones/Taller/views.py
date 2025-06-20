@@ -195,16 +195,22 @@ def crear_tipo_mantenimiento(request):
         nombre = request.POST.get('nombre_mantenimiento')
         precio = request.POST.get('precio_mantenimiento')
 
+        # Validación para evitar nombres duplicados
+        if TipoMantenimiento.objects.filter(nombre_mantenimiento=nombre).exists(): # * Verifica si ya existe un tipo de mantenimiento con el mismo nombre
+            # * Si ya existe, muestra un mensaje de error y redirige a la página
+            messages.error(request, 'Ya existe un tipo de mantenimiento con ese nombre.')
+            return redirect('tipos_mantenimiento')
+        
         TipoMantenimiento.objects.create(
             nombre_mantenimiento=nombre,
             precio_mantenimiento=precio
         )
         
-        messages.success(request, 'Tipo de mantenimiento creado exitosamente.')  # * Mensaje de éxito al crear un tipo de mantenimiento
-        
+        # * Mensaje de éxito al crear un tipo de mantenimiento
+        messages.success(request, 'Tipo de mantenimiento creado exitosamente.') # * Mensaje de éxito al crear un tipo de mantenimiento
         return redirect('tipos_mantenimiento')
-    else:
-        return render(request, 'tipos_mantenimiento.html')
+    
+    return render(request, 'tipos_mantenimiento.html')
 
 # ^ Vista para eliminar un tipo de mantenimiento por su ID
 # ~ Esta vista maneja la eliminación de un tipo de mantenimiento específico de la base de datos
