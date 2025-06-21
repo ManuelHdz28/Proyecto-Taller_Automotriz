@@ -21,8 +21,7 @@
       <div class="modal-body">
             <form method="post" action="{% url 'editar_tipo_mantenimiento' tipo_mantenimiento.id_mantenimiento %}" id="formulario-tipos"> 
             {% csrf_token %}
-            
-            {% csrf_token %}
+
             <div class="mb-3">
                 <label for="nombre_mantenimiento" class="form-label">Nombre del Tipo de Mantenimiento</label>
                 <input type="text" class="form-control" id="nombre_mantenimiento" name="nombre_mantenimiento" value="{{ tipo_mantenimiento.nombre_mantenimiento }}" required>

@@ -19,10 +19,9 @@
         
       </div>
       <div class="modal-body">
-            <form method="post" action="{% url 'editar_repuesto' repuesto.id_repuesto %}"> 
+            <form method="post" action="{% url 'editar_repuesto' repuesto.id_repuesto %}" id="formulario-repuesto"> 
             {% csrf_token %}
-            
-            {% csrf_token %}
+
             <div class="mb-3">
                 <label for="nombre_repuesto" class="form-label" >Nombre del Repuesto</label>
                 <input type="text" class="form-control" id="nombre_repuesto" name="nombre_repuesto" value="{{repuesto.nombre_repuesto}}" required>
