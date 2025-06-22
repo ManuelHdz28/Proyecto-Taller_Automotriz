@@ -292,19 +292,17 @@ from .models import Vehiculo, TipoMantenimiento, Repuesto, Mantenimiento
 # ^ Vista para crear un nuevo mantenimiento
 # ~ Esta vista maneja la creación de un nuevo mantenimiento en el taller, incluyendo la asignación de repuestos.
 def crear_mantenimiento(request):
-    if request.method == 'POST':
+    if request.method == 'POST': # * Verifica si la solicitud es POST
         vehiculo_id = request.POST.get('vehiculo')
         tipo_mantenimiento_id = request.POST.get('tipo_mantenimiento')
         repuestos_ids = request.POST.getlist('repuestos')
         fecha_mantenimiento = request.POST.get('fecha_mantenimiento')
         precio_total = request.POST.get('precioTotal')
 
-        # Obtener objetos relacionados usando claves correctas
         vehiculo = get_object_or_404(Vehiculo, id=vehiculo_id)
         tipo_mantenimiento = get_object_or_404(TipoMantenimiento, id_mantenimiento=tipo_mantenimiento_id)
         repuestos = Repuesto.objects.filter(id_repuesto__in=repuestos_ids)
 
-        # Crear el mantenimiento (sin asignar repuestos aún)
         mantenimiento = Mantenimiento.objects.create(
             vehiculo=vehiculo,
             tipo_mantenimiento=tipo_mantenimiento,
@@ -312,13 +310,19 @@ def crear_mantenimiento(request):
             precioTotal=precio_total
         )
 
-        # * Asignar repuestos después de guardar
         mantenimiento.Repuestos.set(repuestos)
+
+        # ↓↓↓ Reducir cantidad disponible de cada repuesto en 1 unidad
+        for repuesto in repuestos:
+            if repuesto.cantidad_disponible > 0:
+                repuesto.cantidad_disponible -= 1
+                repuesto.save()
 
         messages.success(request, '¡Mantenimiento creado exitosamente!')
         return redirect('mantenimientos')
-    
+
     return render(request, 'mantenimiento.html')
+
 
 # ^ Vista para eliminar un mantenimiento por su ID
 # ~ Esta vista maneja la eliminación de un mantenimiento específico de la base de datos.
