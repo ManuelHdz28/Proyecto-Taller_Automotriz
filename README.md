@@ -45,7 +45,7 @@ ProyectoHDP115/
 1. **Clonar el repositorio**
 
 ```bash
-git clone https://github.com/tuusuario/ProyectoHDP115.git
+git clone https://github.com/ManuelHdz28/Proyecto-Taller_Automotriz.git
 cd ProyectoHDP115
 ```
 
