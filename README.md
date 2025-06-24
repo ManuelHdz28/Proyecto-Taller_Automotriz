@@ -46,7 +46,7 @@ ProyectoHDP115/
 
 ```bash
 git clone https://github.com/ManuelHdz28/Proyecto-Taller_Automotriz.git
-cd ProyectoHDP115
+cd Proyecto-Taller_Automotriz
 ```
 
 2. **Crear entorno virtual (opcional pero recomendado)**
